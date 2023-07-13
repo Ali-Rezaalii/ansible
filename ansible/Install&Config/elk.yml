@@ -1,0 +1,12 @@
+# Playbook to install the ELK stack 
+
+- name: Install ELK-Stack 7.X
+  hosts: elastic
+  become: true
+  roles:
+  - { role: epel-release }
+  - { role: nginx }
+  - { role: java-1.8.0-openjdk }
+  - { role: elasticsearch-7.x }
+  - { role: kibana-7.x }
+

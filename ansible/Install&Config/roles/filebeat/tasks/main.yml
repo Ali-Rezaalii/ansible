@@ -1,0 +1,20 @@
+# Installing filebeat
+
+    - name: "Install filebeat"
+      yum: 
+        name: filebeat
+        update_cache: true
+# Configurations
+
+
+
+
+
+# Starting filebeat
+
+    - name: "Start filebeat service"
+      ansible.builtin.service: 
+        enabled: yes
+        name: filebeat
+        state: started
+

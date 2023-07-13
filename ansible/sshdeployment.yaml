@@ -1,0 +1,51 @@
+---
+ - hosts: all
+   vars:
+     - provision_password: 'a3e8882db900b2665c5fc925bd1ce97d28fe38788f78507c83015c05ead4acad6392ffc3e8b09a469a9769ed682d58cc790be36f64a2ec26d23dcd17dc2f9185'
+     - balootmaster_password: ''
+#https://passwordsgenerator.net/sha512-hash-generator/
+   gather_facts: no
+   remote_user: root
+
+   tasks:
+
+   - name: Add a new user named provision
+     user:
+          name: "provision"
+          password: "{{ provision_password }}"
+
+   - name: Add provision user to the sudoers
+     copy:
+          dest: "/etc/sudoers.d/provision"
+          content: "provision  ALL=(ALL)  NOPASSWD: ALL"
+
+   - name: Deploy SSH Key For provision user
+     authorized_key: user=provision
+                     key="{{ lookup('file', '/home/provision/.ssh/id_rsa.pub') }}"
+                     state=present
+
+   - name: Disable Password Authentication
+     lineinfile:
+           dest: "/etc/ssh/sshd_config"
+           regexp: "^PasswordAuthentication"
+           line: "PasswordAuthentication no"
+           state: "present"
+           backup: yes
+     notify:
+       - restart ssh
+
+   - name: Disable Root Login
+     lineinfile:
+           dest: /etc/ssh/sshd_config
+           regexp: '^PermitRootLogin'
+           line: "PermitRootLogin no"
+           state: present
+           backup: yes
+     notify:
+       - restart ssh
+
+   handlers:
+   - name: restart ssh
+     service:
+       name: sshd
+       state: restarted

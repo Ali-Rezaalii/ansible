@@ -1,0 +1,52 @@
+# Installing elasticsearch
+
+    - name: "Add elasticsearch rpm key"
+      rpm_key:
+        key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+        state: present
+
+    - name: "Add elasticsearch repo"
+      yum_repository:
+        description: elasticsearch repo
+        name: elasticsearch-7.x 
+        baseurl: "https://artifacts.elastic.co/packages/7.x/yum"
+        gpgcheck: 1
+        gpgkey: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+
+    - name: "Install elasticsearch"
+      yum: 
+        name: elasticsearch
+        update_cache: true
+
+# Configurations
+
+    - name: "Access to elasticsearch"
+      lineinfile: 
+       destfile: /etc/elasticsearch/elasticsearch.yml
+       regexp: "network.host:"
+       line: "network.host: 127.0.0.1"
+
+    - name: "Defining server port"
+      lineinfile: 
+       destfile: /etc/elasticsearch/elasticsearch.yml
+       regexp: "http.port:"
+       line: "http.port: 9200"
+
+# Starting elasticsearch
+
+    - name: "Start elasticsearch service"
+      ansible.builtin.service: 
+        enabled: yes
+        name: elasticsearch
+        state: started
+
+# Allow elasticsearch port 9200
+
+    - name: Add firewalld Rule elasticsearch
+      firewalld:
+        zone: public
+        port: 9200/tcp
+        permanent: true
+        state: enabled
+
+

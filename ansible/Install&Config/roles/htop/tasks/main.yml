@@ -1,0 +1,9 @@
+    - name: "Check Installed Packages"
+      package_facts:
+      manager: "auto"
+    
+    - name: "Install htop Package for CentOS"
+      yum:
+        name: [htop]
+        state: latest
+      when: ("epel-release" in ansible_facts.packages) and (ansible_distribution == "CentOS")

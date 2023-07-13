@@ -1,0 +1,11 @@
+    - name: Update Server Centos
+      yum:
+        name: '*'
+        state: latest
+      when: ansible_distribution == 'CentOS'
+      
+    - name: Update Server Ubuntu
+      apt:
+        name: '*'
+        state: latest
+      when: ansible_distribution == 'Ubuntu'

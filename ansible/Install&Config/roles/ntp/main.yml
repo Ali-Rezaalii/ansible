@@ -1,0 +1,21 @@
+    - name: Update tzdata
+      hosts: all
+      become: true
+#################Update Package tzdata on Centos #########################
+    - name: Update tzdata package and install on CentOS
+      yum:
+        name: [tzdata]
+        state: latest
+        update_cache: yes
+      when: ("chronyd" in ansible_facts.packages) and (ansible_distribution == "CentOS")
+##########################################################################
+
+#################Update Package tzdata on Ubuntu #########################
+    - name: Update tzdata package and install on Ubuntu 
+      apt:
+        name: [tzdata]
+        state: latest
+        update_cache: yes
+       #cache_valid_time: 3600
+      when: ansible_distribution == 'Ubuntu'
+##########################################################################

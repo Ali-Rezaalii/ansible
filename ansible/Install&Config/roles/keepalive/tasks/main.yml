@@ -1,0 +1,17 @@
+    - name: "Check Installed epel-release"
+      ansible.builtin.package:
+        name: "epel-release"
+        state: present
+      check_mode: true
+
+    - name: "Install Keepalive for CentOS"
+      yum:
+        name: [keepalived]
+        state: latest
+      when: ansible_distribution == 'CentOS'
+
+    - name: "Start keepalived service"
+      ansible.builtin.service:
+        name: keepalived 
+        state: started
+        enabled: yes

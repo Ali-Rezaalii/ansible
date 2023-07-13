@@ -1,0 +1,21 @@
+    - name: Install Needed Packages for CentOS
+      yum:
+        name: [nano, chrony, net-snmp, net-snmp-utils , traceroute , NetworkManager-tui]
+        state: latest
+      when: ansible_distribution == 'CentOS'
+
+    - name: "Check Installed Packages"
+      package_facts:
+       manager: "auto"
+    
+    - name: "Install htop Package for CentOS"
+      yum:
+        name: [htop]
+        state: latest
+      when: ("epel-release" in ansible_facts.packages) and (ansible_distribution == "CentOS")
+
+    - name: Install Needed Packages for Ubuntu
+      apt:
+        name: ['nano', 'snmpd' , 'chrony' , 'traceroute' ]
+        state: latest
+      when: ansible_distribution == 'Ubuntu'

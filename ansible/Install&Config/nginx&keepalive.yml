@@ -1,0 +1,7 @@
+- name: Update Server
+  hosts: all
+  become: true
+  roles:
+  - { role: epel-release }
+  - { role: nginx }
+  - { role: keepalive }

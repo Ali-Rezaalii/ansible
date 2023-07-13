@@ -1,0 +1,44 @@
+# Installing kibana
+
+    - name: "Add kibana repo"
+      yum_repository:
+        description: kibana repo
+        name: kibana-7.x.repo
+        baseurl: "https://artifacts.elastic.co/packages/7.x/yum"
+        gpgcheck: 1
+        gpgkey: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+
+    - name: "Install kibana"
+      yum: 
+        name: kibana
+        update_cache: true
+
+# Configurations
+
+    - name: "Access to kibana"
+      lineinfile:
+       destfile: /etc/kibana/kibana.yml
+       regexp: "server.host:"
+       line: "server.host: 127.0.0.1"
+
+    - name: "Defining server port"
+      lineinfile:
+       destfile: /etc/kibana/kibana.yml
+       regexp: "server.port:"
+       line: "server.port: 5601"
+    
+    - name: "Defining elasticsearch host"
+      lineinfile:
+       destfile: /etc/kibana/kibana.yml
+       regexp: "elasticsearch.hosts:"
+       line: "elasticsearch.hosts: http://localhost:9200"
+   
+# Starting kibana
+
+    - name: "Start kibana service"
+      ansible.builtin.service: 
+        enabled: yes
+        name: kibana
+        state: started
+
+

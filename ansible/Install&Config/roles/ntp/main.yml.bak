@@ -1,0 +1,21 @@
+    - name: Update tzdata
+      hosts: all
+      become: true
+#################Update Package tzdata on Centos #########################
+    - name: Update tzdata package and install on CentOS
+      when: ansible_distribution == 'CentOS'
+       command: "yum update tzdata"
+        name: tzdata
+        state: latest
+##########################################################################
+
+#################Update Package tzdata on Ubuntu #########################
+    - name: Update tzdata package and install on Ubuntu 
+      when: ansible_distribution == 'Ubuntu'
+       command: "apt-get install tzdata"
+        register: install_chk
+##########################################################################
+
+
+
+

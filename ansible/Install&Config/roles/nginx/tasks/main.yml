@@ -1,0 +1,30 @@
+# Installing nginx
+    - name: "Install nginx"
+      yum:
+        name: [nginx]
+        state: latest
+
+# Starting elasticsearch
+
+    - name: "Start nginx service"
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes
+
+# Allow nginx port HTTP,HTTPS
+
+    - name: Add firewalld Rule http
+      firewalld:
+        zone: public
+        service: http
+        permanent: true
+        state: enabled
+
+    - name: Add firewalld Rule https
+      firewalld:
+        zone: public
+        service: https
+        permanent: true
+        state: enabled
+ 

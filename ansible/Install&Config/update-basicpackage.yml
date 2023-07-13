@@ -1,0 +1,8 @@
+- name: Update-Basic
+  hosts: all
+  become: true
+
+  roles:
+  - { role: updatepackage }
+  - { role: basicpackage }
+

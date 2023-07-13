@@ -1,0 +1,109 @@
+#################Install Docker on CentOS#########################
+    - name: Install yum utils on CentOS
+      yum:
+        name: yum-utils
+        state: latest
+      when: ansible_distribution == 'CentOS'
+
+    - name: Install device-mapper-persistent-data on CentOS
+      yum:
+        name: device-mapper-persistent-data
+        state: latest
+      when: ansible_distribution == 'CentOS'
+
+    - name: Install lvm2 on CentOS
+      yum:
+        name: lvm2
+        state: latest
+      when: ansible_distribution == 'CentOS'
+
+    - name: Add Docker repo on CentOS
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+      become: yes
+      when: ansible_distribution == 'CentOS'
+
+    - name: Install Docker on CentOS
+      package:
+        name: docker-ce
+        state: latest
+      become: yes
+      when: ansible_distribution == 'CentOS'
+
+    - name: Install python-pip
+      yum: 
+        name: python-pip
+        update_cache: yes 
+        state: latest
+      when: ansible_distribution == 'CentOS'
+
+    - name: Install Docker Compose on CentOS
+      shell: sudo curl -L "https://github.com/docker/compose/releases/download/v2.14.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    - name: Change Permission docker compose
+      shell: sudo chmod +x /usr/local/bin/docker-compose
+      when: ansible_distribution == 'CentOS'
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+      become: yes
+      when: ansible_distribution == 'CentOS'
+
+    - name: Add user docker to docker group  on CentOS
+      user:
+        name: docker
+        groups: docker
+        append: yes
+      become: yes
+      when: ansible_distribution == 'CentOS'
+
+################################################################
+
+#################Install Docker on Ubuntu#########################
+
+    - name: Install required system packages for Ubuntu
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Add Docker GPG apt Key on Ubuntu
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Add Docker Repository on Ubuntu
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Update apt and install docker-ce and docker-compose
+      apt:
+        pkg:
+          - docker-ce
+          - docker-compose
+        state: latest
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+      when: ansible_distribution == 'Ubuntu'
+################################################################
+
+
+
+
