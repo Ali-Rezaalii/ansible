@@ -4,7 +4,7 @@
         name: [nginx]
         state: latest
 
-# Starting elasticsearch
+# Starting nginx
 
     - name: "Start nginx service"
       ansible.builtin.service:
